@@ -3,6 +3,8 @@ using AuthApi.Models.DTO;
 using AuthApi.Repositories.Abstract;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace AuthApi.Controllers.v2
 {
@@ -210,5 +212,50 @@ namespace AuthApi.Controllers.v2
             }
             return Ok(new Status(200, "Login success", result)); ;
         }
+
+
+        //new data
+
+        [HttpPost]
+        public async Task<IActionResult> SPTestGetAllUsers(string email, string newPassword)
+        {
+            SqlConnection sqlCon = null;
+            String SqlconString = Models.Url.sqlConnectionString;
+            using (sqlCon = new SqlConnection(SqlconString))
+            {
+                sqlCon.Open();
+                SqlCommand sql_cmnd = new SqlCommand("GetAllUsers_SP", sqlCon);
+                sql_cmnd.CommandType = CommandType.StoredProcedure;
+                var reader = sql_cmnd.ExecuteReader();
+
+                List<AllUsers> list = new List<AllUsers>();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var type = typeof(AllUsers);
+                        AllUsers obj = (AllUsers)Activator.CreateInstance(type);
+                        foreach (var prop in type.GetProperties())
+                        {
+                            var propType = prop.PropertyType;
+                            var a = reader[prop.Name].ToString();
+                            prop.SetValue(obj, reader[prop.Name]);
+                        }
+                        list.Add(obj);
+                    }
+                }
+
+                sqlCon.Close();
+
+                if (list.Count > 0)
+                {
+                    return Ok(new Status(200, "Success", list));
+                }
+
+                return Ok(new Status(400, "Something went Wrong or No Record Found", null));
+            }
+        }
+
     }
 }

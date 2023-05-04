@@ -6,5 +6,6 @@ namespace AuthApi.Repositories.Abstract
     {
         Task<List<AllUsers>?> GetAllUsers();
         Task<AllUsers?> GetSingleUser(int id);
+        Task<int> DeleteUser(string emailid);
     }
 }

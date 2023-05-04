@@ -61,7 +61,7 @@ namespace AuthApi.Controllers
             }
             return Ok(new Status(200, "Success", result));
         }
-
+        /*
         [MapToApiVersion("2.0")]
         [HttpGet("{id}")]
         public async Task<ActionResult<AllUsers>> DeleteUser(int id)
@@ -77,6 +77,18 @@ namespace AuthApi.Controllers
                 result.ProfileImage = img;
             }
             return Ok(new Status(200, "Success", result));
+        }
+        */
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(JustEmail model)
+        {
+            int result = await _adminService.DeleteUser(model.Email);
+            if (result == 0)
+            {
+                return Ok(new Status(404, "Either User Already Deleted or User Does not exist or Something went Wrong!!!", null));
+            }
+            return Ok(new Status(200, "User Deleted Successfully!!!", null));
         }
     }
 }
