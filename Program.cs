@@ -38,7 +38,9 @@ builder.Services.AddVersionedApiExplorer(options =>
     options.SubstituteApiVersionInUrl = true;
 });
 //setup database context
-builder.Services.AddDbContext<DatabaseContext>(optionsAction: options => options.UseSqlServer(builder.Configuration.GetConnectionString(name: "DefaultConnection")));
+builder.Services.AddDbContext<DatabaseContext>(optionsAction: options => options.UseSqlServer(builder.Configuration.GetConnectionString(name: "DefaultConnectionString")));
+builder.Services.AddDbContext<DatabaseContext>(optionsAction: options => options.UseSqlite(builder.Configuration.GetConnectionString(name: "SQLiteConnection")));
+
 
 //Adding  Authentication with JWT
 builder.Services.AddAuthentication(options =>

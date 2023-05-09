@@ -199,7 +199,7 @@ namespace AuthApi.Repositories.Domain
                     user.ExpiryTime = DateTime.Now.AddMinutes(5);
                     _context.SaveChanges();
                 }
-                Message message = new Message { To = email.ToLower(), Subject = "Please verify your email", Content = otp.ToString() };
+                Message message = new Message { To = email.ToLower(), Subject = "Please verify OTP to Continue", Content = $"Your OTP is {otp} valid till {DateTime.Now.AddMinutes(5)}"};
                 _emailService.SendEmail(message);
                 return "Otp Send ";
             }

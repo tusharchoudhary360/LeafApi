@@ -71,7 +71,7 @@ namespace AuthApi.Controllers.v2
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResendOtp(JustEmail model)
+        public async Task<IActionResult> GenerateOtp(JustEmail model)
         {
             if (model.Email == null)
             {
